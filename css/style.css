@@ -46,13 +46,21 @@
   }
 }
 
-
 .container {
+  width: 1024px;
+}
+
+.banner-container {
   width: 768px;
 }
 
 .table-container {
+  opacity: 0;
   margin-top: 20px;
+}
+
+.table-container.shown {
+  opacity: 1
 }
 
 .leaderboard-field {

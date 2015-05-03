@@ -10,8 +10,10 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
 
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="css/normalize.css">
         <link rel="stylesheet" href="css/readable.css">
+        <link rel="stylesheet" href="css/animate.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/style.css">
         <script src="js/vendor/modernizr-2.8.3.min.js"></script>
@@ -22,35 +24,75 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <div class="container">
-            <h1>NUSWhispers Leaderboard</h1>
-            <hr>
-            <table class="table table-striped" ng-controller="LeaderboardController">
-                <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>No. Comments</th>
-                    <th>No. Likes Received</th>
-                    <th>Score</th>
-                </tr>
-                <tr ng-repeat="row in leaderboard">
-                    <td>{{$index + 1}}</td>
-                    <td>
-                        <a ng-href="http://facebook.com/{{row.facebook_id}}" target="_blank">
-                            <img class="profile-thumbnail img-circle" ng-src="http://graph.facebook.com/{{row.facebook_id}}/picture?width=128&height=128">{{row.name}}
-                        </a>
-                    </td>
-                    <td>{{row.comment_count}}</td>
-                    <td>{{row.like_count}}</td>
-                    <td>{{row.activity_score}}</td>
-                </tr>
-            </table>
+        <div class="banner">
+            <div class="container">
+                <div class="title-container">
+                    <img class="logo" src="http://nuswhispers.com/assets/img/logo.png">
+                    <h1 class="title">NUSWhispers</h1>
+                    <h3 class="whispers-dark-blue subtitle">Leaderboard</h3>
+                </div>
+            </div>
         </div>
+        <div class="container" ng-controller="LeaderboardController">
+            <div class="row">
+                <div class="col-md-3">
+                    <h4>Month of April</h4>
+                </div>
+                <div class="col-md-9">
+                    <ul class="nav nav-pills leaderboard-field pull-right" ng-init="field = 'activity_score'">
+                        <li role="presentation" ng-class="{active: field=='activity_score'}" ng-click="field='activity_score'"><a href>Overall</a></li>
+                        <li role="presentation" ng-class="{active: field=='comment_count'}" ng-click="field='comment_count'"><a href>No. of Comments</a></li>
+                        <li role="presentation" ng-class="{active: field=='like_count'}" ng-click="field='like_count'"><a href>Likes Received</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row table-container">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Name</th>
+                                    <th>
+                                        No. Comments <span data-toggle="tooltip" data-placement="top" title="Total number of comments or replies made"><i class="fa fa-info-circle"></i></span>
+                                    </th>
+                                    <th>
+                                        No. Likes Received <span data-toggle="tooltip" data-placement="top" title="Total number of likes on the comments and replies"><i class="fa fa-info-circle"></i></span>
+                                    </th>
+                                    <th>
+                                        Score <span data-toggle="tooltip" data-placement="top" title="Calculated by 2 x comments + 1 x likes"><i class="fa fa-info-circle"></i></span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody ng-show="loaded">
+                                <tr ng-repeat="row in leaderboard | orderBy:'-' + field">
+                                    <td>{{$index + 1}}</td>
+                                    <td>
+                                        <a class="leaderboard-name" ng-href="https://www.facebook.com/{{row.facebook_id}}" target="_blank">
+                                            <img class="profile-thumbnail img-circle" ng-src="http://graph.facebook.com/{{row.facebook_id}}/picture?width=128&height=128">{{row.name}}
+                                        </a>
+                                    </td>
+                                    <td>{{row.comment_count}}</td>
+                                    <td>{{row.like_count}}</td>
+                                    <td>{{row.activity_score}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <footer>
+            Made by Tay Yang Shun (<a href="https://github.com/yangshun">@yangshun</a>). Source code on <a href="https://github.com/yangshun/nuswhispers-leaderboard" target="_blank">Github</a>.
+        </footer>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
         <script src="js/main.js"></script>
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>

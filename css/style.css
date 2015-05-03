@@ -1,0 +1,12 @@
+.container {
+  width: 768px;
+}
+
+.profile-thumbnail {
+  margin-right: 10px;
+  width: 48px;
+}
+
+td {
+  line-height: 48px !important;
+}

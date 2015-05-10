@@ -2,7 +2,7 @@ import httplib
 import json
 from time import ctime
 
-ACCESS_TOKEN = ''
+ACCESS_TOKEN = 'CAACEdEose0cBAOWmsc1MWt2pxT2IDPD9BEWaYcD1ndnKTzzgXfosN5vpPOK9bXMVSJAEz38lDp8TCfZARQJ5ATeKtwq9dgqYLZASSdSWk94B7V0kbUiJKVFs3MGP2qX9aIkEIPqlJs1hSM5uUtIDQYafozHZBZBPCS7YglJAiZA3wjXMP9xY45lwunMywDKlQ5KjUfzJQHJgjTwloLYAakJsAIiCbZBmwZD'
 
 HOST = 'graph.facebook.com'
 PATH = '/v2.3/nuswhispers/feed'
@@ -45,12 +45,9 @@ def request_data(host, path):
     count += 1
     request_data(HOST, next_path)
   else:
-    process_data(feed_data)
-
-member_dict = {}
+    save_data(feed_data)
 
 def save_data(data):
-  
   dates = {}
   for post in data:
     date = post['created_time'].split('T')[0]
@@ -66,56 +63,4 @@ def save_data(data):
     }
     open('./data/' + date + '.json', 'w').write(json.dumps(filedata))
 
-
-def process_data(data):
-
-  save_data(data)
-
-  def process_post(post):
-    if 'comments' in post:
-      for comment in post['comments']['data']:
-        commenter_id = comment['from']['id']
-        if commenter_id not in member_dict:
-          member_dict[commenter_id] = comment['from']
-          member_dict[commenter_id]['comment_count'] = 1
-          member_dict[commenter_id]['like_count'] = comment['like_count']
-        else:
-          member_dict[commenter_id]['comment_count'] += 1
-          member_dict[commenter_id]['like_count'] += comment['like_count']
-        process_post(comment)
-
-  for post in data:
-    process_post(post)
-
-  activity_dict = {}
-
-  for member_id in member_dict:
-    member = member_dict[member_id]
-    activity_score = 0
-
-    if 'comment_count' in member:
-      activity_score += 3 * member['comment_count']
-
-    if 'like_count' in member:
-      activity_score += member['like_count']
-
-    activity_dict[member['id']] = {
-      'facebook_id': member_id,
-      'activity_score': activity_score,
-      'name': member['name'],
-      'like_count': member['like_count'],
-      'comment_count': member['comment_count'],
-    }
-
-  active_members = top_k_active_members(activity_dict, 50)
-  for member in active_members:
-    print member
-  open('./leaderboard/april.json', 'w').write(json.dumps(active_members))
-
-def top_k_active_members(data, k):
-  members_list = [value for (key, value) in data.items()]
-  members_list.sort(key=lambda x: x['activity_score'], reverse=True)
-  return members_list[:k]
-
 request_data(HOST, PATH + '?' + '&'.join(params))
-
